@@ -5,16 +5,19 @@ import { getVegasTournaments } from "@/lib/startgg";
 // Moving these outside the component makes them "stable" for the render cycle
 const now = Math.floor(Date.now() / 1000);
 
-// 3. TIME BOUNDARIES (Vegas Focused)
-// This creates a string of the current date in Vegas, then parses it
-const vegasDateString = new Date().toLocaleDateString("en-US", {
+// TIME BOUNDARIES (Vegas Focused)
+// We get the current date in Vegas to ensure filtering matches the display
+const vegasNow = new Intl.DateTimeFormat("en-US", {
   timeZone: "America/Los_Angeles",
-});
+  year: 'numeric',
+  month: 'numeric',
+  day: 'numeric'
+}).format(new Date());
 
-const startOfToday = new Date(vegasDateString);
+const startOfToday = new Date(vegasNow);
 startOfToday.setHours(0, 0, 0, 0);
 
-const endOfToday = new Date(vegasDateString);
+const endOfToday = new Date(vegasNow);
 endOfToday.setHours(23, 59, 59, 999);
 
 const todayTs = Math.floor(startOfToday.getTime() / 1000);
