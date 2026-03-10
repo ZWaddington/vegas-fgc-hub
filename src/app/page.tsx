@@ -2,23 +2,23 @@ export const dynamic = 'force-dynamic';
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { getVegasTournaments } from "@/lib/startgg";
 
-// Moving these outside the component makes them "stable" for the render cycle
+// Current time in seconds
 const now = Math.floor(Date.now() / 1000);
 
-// TIME BOUNDARIES (Vegas Focused)
-// Get the current date in Vegas as a stable string (MM/DD/YYYY)
-const vegasNow = new Date().toLocaleDateString("en-US", {
-  timeZone: "America/Los_Angeles"
-});
+// Get the exact "Year, Month, Day" for Vegas right now
+const vegasString = new Intl.DateTimeFormat("en-CA", {
+  timeZone: "America/Los_Angeles",
+  year: 'numeric',
+  month: '2-digit',
+  day: '2-digit'
+}).format(new Date()); // Result: "2026-03-10"
 
-// Create the start of the day in Vegas
-const startOfToday = new Date(vegasNow);
-startOfToday.setHours(0, 0, 0, 0);
+// Manually create the start and end of that day in Vegas
+// We append the PST/PDT offset (-07:00 or -08:00) to be absolute
+const startOfToday = new Date(`${vegasString}T00:00:00-07:00`); 
+const endOfToday = new Date(`${vegasString}T23:59:59-07:00`);
 
-// Create the end of the day in Vegas
-const endOfToday = new Date(vegasNow);
-endOfToday.setHours(23, 59, 59, 999);
-
+// Convert back to Unix for your filtering logic
 const todayTs = Math.floor(startOfToday.getTime() / 1000);
 const tonightTs = Math.floor(endOfToday.getTime() / 1000);
 
