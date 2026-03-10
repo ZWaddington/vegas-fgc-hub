@@ -6,17 +6,16 @@ import { getVegasTournaments } from "@/lib/startgg";
 const now = Math.floor(Date.now() / 1000);
 
 // TIME BOUNDARIES (Vegas Focused)
-// We get the current date in Vegas to ensure filtering matches the display
-const vegasNow = new Intl.DateTimeFormat("en-US", {
-  timeZone: "America/Los_Angeles",
-  year: 'numeric',
-  month: 'numeric',
-  day: 'numeric'
-}).format(new Date());
+// Get the current date in Vegas as a stable string (MM/DD/YYYY)
+const vegasNow = new Date().toLocaleDateString("en-US", {
+  timeZone: "America/Los_Angeles"
+});
 
+// Create the start of the day in Vegas
 const startOfToday = new Date(vegasNow);
 startOfToday.setHours(0, 0, 0, 0);
 
+// Create the end of the day in Vegas
 const endOfToday = new Date(vegasNow);
 endOfToday.setHours(23, 59, 59, 999);
 
