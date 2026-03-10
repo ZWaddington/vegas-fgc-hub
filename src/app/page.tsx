@@ -4,12 +4,19 @@ import { getVegasTournaments } from "@/lib/startgg";
 // Moving these outside the component makes them "stable" for the render cycle
 const now = Math.floor(Date.now() / 1000);
 
-const startOfToday = new Date();
-startOfToday.setHours(0, 0, 0, 0);
-const todayTs = Math.floor(startOfToday.getTime() / 1000);
+// 3. TIME BOUNDARIES (Vegas Focused)
+// This creates a string of the current date in Vegas, then parses it
+const vegasDateString = new Date().toLocaleDateString("en-US", {
+  timeZone: "America/Los_Angeles",
+});
 
-const endOfToday = new Date();
+const startOfToday = new Date(vegasDateString);
+startOfToday.setHours(0, 0, 0, 0);
+
+const endOfToday = new Date(vegasDateString);
 endOfToday.setHours(23, 59, 59, 999);
+
+const todayTs = Math.floor(startOfToday.getTime() / 1000);
 const tonightTs = Math.floor(endOfToday.getTime() / 1000);
 
 export default async function Home() {
@@ -38,10 +45,13 @@ export default async function Home() {
           <div>
             <h2 className="text-2xl font-bold text-white">{t.name}</h2>
             <p className="text-sm text-zinc-400 mt-1">
-              {new Date(t.startAt * 1000).toLocaleDateString("en-US", {
-                weekday: 'long', month: 'long', day: 'numeric'
-              })}
-            </p>
+            {new Date(t.startAt * 1000).toLocaleDateString("en-US", {
+              weekday: 'long', 
+              month: 'long', 
+              day: 'numeric',
+              timeZone: "America/Los_Angeles" // <--- Ensure Pacific Time
+            })}
+          </p>
           </div>
           {t.startAt >= todayTs && t.startAt <= tonightTs && (
             <span className="bg-red-600 text-white text-[10px] font-black px-2 py-1 rounded uppercase tracking-tighter animate-pulse">
